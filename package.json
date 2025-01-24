@@ -1,0 +1,19 @@
+{
+  "name": "virtual_garage",
+  "version": "1.0.0",
+  "description": "A website where you can customize and explore what cars you dream of having one day in your very own garage.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.172.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
