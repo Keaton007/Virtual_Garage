@@ -29,7 +29,7 @@ export default function HomePage() {
   const handleButtonClick = () => {
     const isLoggedIn: boolean = false; // Replace this with actual auth logic when its made
     if (isLoggedIn) {
-      router.push("/customizations");
+      router.push("/vehicles");
     } else {
       router.push("/login");
     }
@@ -38,7 +38,7 @@ export default function HomePage() {
   return (
     <div
       className="relative h-screen bg-cover bg-center"
-      style={{ backgroundImage: '' }} //find a background image here.
+      style={{ backgroundImage: 'URL("/PHG0721AuthCars02-1.jpg")'}} //find a background image here.
     >
       <div className="flex flex-col items-center justify-center h-full text-center">
         <h1 className="text-white text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
