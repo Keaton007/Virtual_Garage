@@ -1,4 +1,4 @@
-// app/layout.tsx
+
 import Link from "next/link";
 import { ReactNode } from "react";
 import "./globals.css";
@@ -15,7 +15,7 @@ export default function RootLayout({ children }: LayoutProps) {
           <Link href="/" className="text-white text-lg font-semibold">
             Home
           </Link>
-          <Link href="/login" className="text-white text-lg font-semibold">
+          <Link href="/ui/login" className="text-white text-lg font-semibold">
             Log In
           </Link>
         </nav>
