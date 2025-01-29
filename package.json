@@ -2,12 +2,13 @@
   "name": "virtual_garage",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
     "dev": "next dev --turbopack",
-    "build": "next build",
     "lint": "next lint"
   },
   "keywords": [],
@@ -17,13 +18,13 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoos": "^0.0.1-security",
     "mongoose": "^8.9.5",
     "next": "15.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -38,5 +39,17 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
