@@ -22,7 +22,7 @@ export default function LoginForm() {
       });
 
       if (response.ok) {
-        router.push("/ui/vehicles"); // Redirect after successful login
+        router.push("/vehicles"); // Redirect after successful login
       } else {
         const data = await response.json();
         setError(data.message || "Login failed. Please try again.");
@@ -55,7 +55,7 @@ export default function LoginForm() {
           <div className="w-full mt-4">
             <input
               className="block w-full px-4 py-2 mt-2 text-gray-300 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-              type="email"
+              type="Username"
               placeholder="Username"
               aria-label="Username"
               value={username}
@@ -67,7 +67,7 @@ export default function LoginForm() {
           <div className="w-full mt-4">
             <input
               className="block w-full px-4 py-2 mt-2 text-gray-300 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-              type="password"
+              type="Password"
               placeholder="Password"
               aria-label="Password"
               value={password}
@@ -105,7 +105,7 @@ export default function LoginForm() {
           Don't have an account?{" "}
         </span>
         <a
-          href="/ui/register"
+          href="/register"
           className="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
         >
           Register
