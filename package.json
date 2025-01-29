@@ -2,21 +2,16 @@
   "name": "virtual_garage",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react": "^16.3.2",
-    "react-360": "^1.2.0",
-    "react-360-web": "^1.2.0",
-    "three": "^0.172.0"
-  },
-  "devDependencies": {
-    "http-server": "^14.1.1"
+    "axios": "^0.21.4",
+    "express": "^4.21.2"
   }
 }
