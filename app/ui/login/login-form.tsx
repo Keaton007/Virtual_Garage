@@ -22,7 +22,7 @@ export default function LoginForm() {
       });
 
       if (response.ok) {
-        router.push("/ui/vehicles"); // Redirect after successful login
+        router.push("/vehicles"); // Redirect after successful login
       } else {
         const data = await response.json();
         setError(data.message || "Login failed. Please try again.");
@@ -105,7 +105,7 @@ export default function LoginForm() {
           Don't have an account?{" "}
         </span>
         <a
-          href="/ui/register"
+          href="/register"
           className="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
         >
           Register

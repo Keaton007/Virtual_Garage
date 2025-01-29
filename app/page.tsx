@@ -29,9 +29,9 @@ export default function HomePage() {
   const handleButtonClick = () => {
     const isLoggedIn: boolean = false; // Replace this with actual auth logic when its made
     if (isLoggedIn) {
-      router.push("/ui/vehicles");
+      router.push("/vehicles");
     } else {
-      router.push("/ui/login");
+      router.push("/login");
     }
   };
 
@@ -52,7 +52,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <Link href="/ui/login">
+        <Link href="/login">
           Log In
         </Link>
       </nav>
