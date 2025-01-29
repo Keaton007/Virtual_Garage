@@ -1,6 +1,6 @@
-
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -38,8 +38,24 @@ export default function HomePage() {
   return (
     <div
       className="relative h-screen bg-cover bg-center"
-      style={{ backgroundImage: 'URL("/PHG0721AuthCars02-1.jpg")'}} //find a background image here.
+      style={{ backgroundImage: 'URL("/PHG0721AuthCars02-1.jpg")' }} //find a background image here.
     >
+      <nav className="absolute top-0 left-0 w-full p-4 flex justify-between bg-black bg-opacity-50 z-10">
+        <div className="flex items-center space-x-4">
+          <img
+            className="w-auto h-12 sm:h-8"
+            src="/c75ea8f9-32a4-4ba9-a605-805d37d68b07.webp"
+            alt="Logo"
+          />
+          <Link href="/">
+            Home
+          </Link>
+        </div>
+
+        <Link href="/ui/login">
+          Log In
+        </Link>
+      </nav>
       <div className="flex flex-col items-center justify-center h-full text-center">
         <h1 className="text-white text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
           {currentMessage}
