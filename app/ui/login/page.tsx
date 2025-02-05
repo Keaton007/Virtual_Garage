@@ -1,18 +1,14 @@
-
+import PageLayout from "@/app/components/PageLayout";
 import LoginForm from "./login-form";
 
 export default function LoginPage() {
   return (
-    <div
-      className="relative w-full h-screen bg-cover bg-center"
-      style={{
-        backgroundImage: 'url("/minimalist-garage-example.jpg")', 
-      }}
-    >
-      <div className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-[7px]"></div>
-      <div className="flex items-center justify-center min-h-screen z-10 relative">
-        <LoginForm />
+    <PageLayout>
+      <div className="container mx-auto px-6 py-20">
+        <div className="max-w-md mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/10">
+          <LoginForm />
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
