@@ -3,70 +3,81 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import PageLayout from "@/app/components/PageLayout";
 
 const messages: string[] = [
-  "Find your dream vehicle",
-  "Log-in to save your customizations",
-  "Dream Garage",
+  "Transform your vehicle into a masterpiece",
+  "Customize every detail to your vision", 
+  "Create the car of your dreams",
+  "Join thousands of car enthusiasts",
 ];
 
 export default function HomePage() {
-  const [currentMessage, setCurrentMessage] = useState<string>(messages[0]);
+  const [currentMessage, setCurrentMessage] = useState(messages[0]);
+  const [opacity, setOpacity] = useState(1);
   const router = useRouter();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentMessage((prev: string) => {
+    const interval = setInterval(async () => {
+      setOpacity(0);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setCurrentMessage((prev) => {
         const currentIndex = messages.indexOf(prev);
-        const nextIndex = (currentIndex + 1) % messages.length;
-        return messages[nextIndex];
+        return messages[(currentIndex + 1) % messages.length];
       });
-    }, 3000);
-
+      setOpacity(1);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   const handleButtonClick = () => {
-    const isLoggedIn: boolean = false; // Replace this with actual auth logic when its made
-    if (isLoggedIn) {
-      router.push("/vehicles");
-    } else {
-      router.push("/login");
-    }
+    const isLoggedIn = false; // Replace with actual auth logic
+    router.push(isLoggedIn ? "/vehicles" : "/login");
   };
 
   return (
-    <div
-      className="relative h-screen bg-cover bg-center"
-      style={{ backgroundImage: 'URL("/PHG0721AuthCars02-1.jpg")' }} //find a background image here.
-    >
-      <nav className="absolute top-0 left-0 w-full p-4 flex justify-between bg-black bg-opacity-50 z-10">
-        <div className="flex items-center space-x-4">
-          <img
-            className="w-auto h-12 sm:h-8"
-            src="/c75ea8f9-32a4-4ba9-a605-805d37d68b07.webp"
-            alt="Logo"
-          />
-          <Link href="/">
-            Home
-          </Link>
-        </div>
-
-        <Link href="/login">
-          Log In
-        </Link>
-      </nav>
-      <div className="flex flex-col items-center justify-center h-full text-center">
-        <h1 className="text-white text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-          {currentMessage}
-        </h1>
-        <button
-          onClick={handleButtonClick}
-          className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-2xl text-lg font-semibold"
-        >
-          Start Customizing
-        </button>
+    <PageLayout className="flex">
+      {/* Left side - Car Image */}
+      <div className="w-1/2 flex items-center justify-center p-8 bg-[#2B4C5B]/10">
+        <Image
+          src="/car-preview.jpg"
+          alt="Luxury car preview"
+          width={800}
+          height={600}
+          className="rounded-2xl shadow-xl object-cover hover:scale-105 transition-transform duration-300"
+          priority
+        />
       </div>
-    </div>
+
+      {/* Right side - Content */}
+      <div className="w-1/2 flex flex-col justify-center p-16 bg-gradient-to-br from-[#2B4C5B]/10 to-[#f26522]/5">
+        <div className="max-w-xl">
+          <Image
+            src="/c75ea8f9-32a4-4ba9-a605-805d37d68b07.webp"
+            alt="Virtual Garage Logo"
+            className="w-72 mb-12 rounded-xl"
+            width={288}
+            height={72}
+          />
+          <h2
+            className="text-5xl md:text-6xl font-bold text-white mb-8 leading-tight"
+            style={{ transition: "opacity 500ms ease-in-out", opacity }}
+          >
+            {currentMessage}
+          </h2>
+          <p className="text-white/80 text-lg mb-12">
+            Experience the future of automotive customization with our cutting-edge platform.
+          </p>
+          <button
+            onClick={handleButtonClick}
+            className="px-10 py-4 text-white bg-[#f26522]/90 hover:bg-[#f26522] rounded-full text-xl font-semibold transition-all hover:shadow-lg hover:shadow-[#f26522]/20 transform hover:-translate-y-0.5"
+            aria-label="Start customizing your car"
+          >
+            Start Customizing
+          </button>
+        </div>
+      </div>
+    </PageLayout>
   );
 }
