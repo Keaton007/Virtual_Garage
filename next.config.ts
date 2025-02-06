@@ -21,9 +21,19 @@ const nextConfig: NextConfig = {
       {
         source: '/about',
         destination: '/ui/about',
+      },
+      {
+        source: '/my-vehicles',
+        destination: '/ui/my-vehicles',
+      },
+      {
+        source: '/dealers',
+        destination: '/ui/dealers',
       }
     ];
   },
 };
+
+
 
 export default nextConfig;
