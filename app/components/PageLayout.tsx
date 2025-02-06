@@ -55,9 +55,14 @@ export default function PageLayout({ children, className = "" }: PageLayoutProps
                 Dealers
               </Link>
               {isAuthenticated && (
-                <Link href="/vehicles" className="text-white/90 hover:text-[#f26522] font-medium transition-colors">
-                  My Vehicles
-                </Link>
+                <>
+                  <Link href="/vehicles" className="text-white/90 hover:text-[#f26522] font-medium transition-colors">
+                    Craft a Vehicle
+                  </Link>
+                  <Link href="/my-vehicles" className="text-white/90 hover:text-[#f26522] font-medium transition-colors">
+                    My Vehicles
+                  </Link>
+                </>
               )}
               <Link href="/about" className="text-white/90 hover:text-[#f26522] font-medium transition-colors">
                 About Us
