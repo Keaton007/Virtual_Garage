@@ -20,34 +20,37 @@ export default function RegisterForm() {
         setError("");
 
         try {
-            if (!formData.username && !formData.email && !formData.password) {
+            if (!formData.username || !formData.email || !formData.password) {
                 setError("Please fill out all fields");
                 return;
-            };
+            }
 
             if (formData.password !== formData.confirmPassword) {
-                setError("Please make sure the passwords are the same");
+                setError("Passwords do not match");
                 return;
-            };
+            }
 
-            // replace with register api call, need to return a token for login
-            // will redirect to /vehicles with the token
             const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username: formData.username, email: formData.email, password: formData.password }),
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password
+                }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                //attach token here, send to vehicles. user will be logged in.
-                router.push("/ui/vehicles");
+                // Redirect to login page after successful registration
+                router.push("/login");
             } else {
-                const data = await response.json();
-                setError(data.message);
+                setError(data.message || "Registration failed");
             }
         } catch (err) {
             console.error(err);
-            setError("An unexpected error occured. Please try again.");
+            setError("An unexpected error occurred. Please try again.");
         }
     };
 

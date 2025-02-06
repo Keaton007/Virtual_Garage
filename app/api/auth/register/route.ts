@@ -4,12 +4,14 @@ import { connectToDatabase } from "../../../lib/mongodb";
 
 export async function POST(req: Request) {
     try {
-        const { username, password } = await req.json();
+        const { username, email, password } = await req.json();
         const db = await connectToDatabase();
         const usersCollection = db.collection("users");
 
-        // Check if user already exists
-        const existingUser = await usersCollection.findOne({ username });
+        // Check if user already exists (check both username and email)
+        const existingUser = await usersCollection.findOne({ 
+            $or: [{ username }, { email }] 
+        });
         if (existingUser) {
             return NextResponse.json({ message: "User already exists" }, { status: 400 });
         }
@@ -17,8 +19,12 @@ export async function POST(req: Request) {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new user
-        const result = await usersCollection.insertOne({ username, password: hashedPassword });
+        // Create new user with email
+        const result = await usersCollection.insertOne({ 
+            username, 
+            email, 
+            password: hashedPassword 
+        });
 
         return NextResponse.json({ message: "User registered successfully", userId: result.insertedId }, { status: 201 });
     } catch (error) {

@@ -16,9 +16,30 @@ export async function POST(req: Request) {
         }
 
         // Create JWT Token
-        const token = jwt.sign({ id: user._id, username }, process.env.JWT_SECRET!, { expiresIn: "1h" });
+        const token = jwt.sign(
+            { id: user._id, username: user.username },
+            process.env.JWT_SECRET!,
+            { expiresIn: "24h" }
+        );
 
-        return NextResponse.json({ token }, { status: 200 });
+        // Create the response
+        const response = NextResponse.json(
+            { token, message: "Login successful" },
+            { status: 200 }
+        );
+
+        // Set HTTP-only cookie with explicit attributes
+        response.cookies.set({
+            name: 'authToken',
+            value: token,
+            httpOnly: true,
+            path: '/',
+            maxAge: 60 * 60 * 24, // 24 hours
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        });
+
+        return response;
     } catch (error) {
         console.error("Error logging in:", error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

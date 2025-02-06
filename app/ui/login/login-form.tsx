@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { setAuthToken } from '@/app/utils/auth';
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -16,21 +17,22 @@ export default function LoginForm() {
     setError("");
 
     try {
-      // Replace this with actual API call for login
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        credentials: 'include',
       });
 
-      if (response.ok) {
-        router.push("/vehicles"); // Redirect after successful login
+      const data = await response.json();
+
+      if (response.ok && data.token) {
+        setAuthToken(data.token);
+        window.location.href = '/vehicles';
       } else {
-        const data = await response.json();
         setError(data.message || "Login failed. Please try again.");
       }
     } catch (err) {
-      console.error(err);
       setError("An unexpected error occurred. Please try again.");
     }
   };
