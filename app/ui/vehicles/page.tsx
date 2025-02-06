@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function Dashboard() {
+function Dashboard() {  // Removed "export default"
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -16,13 +16,14 @@ export default function Dashboard() {
   return <div>Welcome, {session.user?.name}!</div>;
 }
 
+
 //Middleware for restricting view of vehicles to users that are logged in only.
 interface Vehicle {
   _id: string;
   name: string;
 }
 
-export default function VehiclesPage() {
+export default function VehiclesPage() {  // Keeping VehiclesPage as the default export
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

@@ -15,7 +15,7 @@ export default function LoginForm() {
 
     try {
       // Replace this with actual API call for login
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

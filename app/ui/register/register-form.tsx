@@ -29,7 +29,7 @@ export default function RegisterForm() {
 
             // replace with register api call, need to return a token for login
             // will redirect to /vehicles with the token
-            const response = await fetch("/app/lib/register", {
+            const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, email, password }),
