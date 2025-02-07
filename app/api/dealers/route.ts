@@ -62,7 +62,7 @@ export async function GET(request: Request) {
   }
 }
 
-// Helper function to calculate distance
+// Helper function to calculate distance, found on stack overflow
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3959; // Earth's radius in miles
   const dLat = (lat2 - lat1) * Math.PI / 180;
