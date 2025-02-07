@@ -1,13 +1,14 @@
 {
   "name": "virtual_garage",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "A website where you can customize and explore what cars you dream of having one day in your very own garage.",
+  "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
     "bcrypt": "^5.1.1",
