@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getAuthToken } from '@/app/utils/auth';
+import Image from 'next/image';
 import PageLayout from "@/app/components/PageLayout";
 
 interface Vehicle {
@@ -15,7 +15,7 @@ interface Vehicle {
   imageUrl: string;
 }
 
-// Example saved vehicles (replace with actual data later
+/* Example saved vehicles (replace with actual data later
 const SAVED_VEHICLES: Vehicle[] = [
   {
     _id: '1',
@@ -28,6 +28,7 @@ const SAVED_VEHICLES: Vehicle[] = [
     imageUrl: '/placeholder-supra.jpg'
   }
 ];
+*/
 
 export default function MyVehiclesPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -69,7 +70,7 @@ export default function MyVehiclesPage() {
                     
                     {/* Main Image Area */}
                     <div className="aspect-[16/9] relative rounded-xl overflow-hidden">
-                      <img 
+                      <Image
                         src={vehicle.imageUrl}
                         alt="Vehicle Preview"
                         className="absolute inset-0 w-full h-full object-cover"

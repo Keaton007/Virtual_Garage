@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,7 +10,6 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Create a larger bounding box (roughly 100-mile radius)
     const boundingBox = {
       north: parseFloat(lat) + 1,
       south: parseFloat(lat) - 1,
@@ -18,12 +17,11 @@ export async function GET(request: Request) {
       west: parseFloat(lon) - 1
     };
 
-    // Try different search terms to find dealerships
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?` + 
       `format=json&q=car+dealer+OR+auto+sales+OR+automotive` +
       `&viewbox=${boundingBox.west},${boundingBox.south},${boundingBox.east},${boundingBox.north}` +
-      `&bounded=1`,  // Restrict to bounding box
+      `&bounded=1`,  
       {
         headers: {
           'Accept': 'application/json',
@@ -36,35 +34,40 @@ export async function GET(request: Request) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const data = await response.json();
-    console.log('Raw API response:', data); // Debug log
+    const data: Place[] = await response.json(); // Explicit typing here
+    console.log('Raw API response:', data);
 
-    // Filter results by distance (within 100 miles)
-    const filteredData = data.filter((place: any) => {
+    interface Place {
+      lat: string;
+      lon: string;
+      name?: string;
+    }
+
+    const filteredData = data.filter((place: Place) => {
       const distance = calculateDistance(
         parseFloat(lat),
         parseFloat(lon),
         parseFloat(place.lat),
         parseFloat(place.lon)
       );
-      return parseFloat(distance) <= 100; // Increased radius to 100 miles
+      return parseFloat(distance) <= 100;
     });
 
-    console.log('Filtered dealerships:', filteredData); // Debug log
+    console.log('Filtered dealerships:', filteredData);
     return NextResponse.json(filteredData);
     
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching dealerships:', error);
     return NextResponse.json(
-      { error: `Failed to fetch dealerships: ${error.message}` },
+      { error: `Failed to fetch dealerships: ${(error as Error).message}` },
       { status: 500 }
     );
   }
 }
 
-// Helper function to calculate distance, found on stack overflow
+
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 3959; // Earth's radius in miles
+  const R = 3959; 
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = 
@@ -73,4 +76,4 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     Math.sin(dLon/2) * Math.sin(dLon/2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   return (R * c).toFixed(1);
-} 
+}

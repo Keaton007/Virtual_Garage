@@ -18,16 +18,8 @@ export async function connectToDatabase(): Promise<Db> {
   return dbInstance;
 }
 
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
-
-declare global {
-  var mongoose: MongooseCache;
-}
-
-let cached = global.mongoose;
+// Forcefully type global.mongoose
+let cached = global.mongoose as { conn: mongoose.Connection | null; promise: Promise<mongoose.Connection> | null };
 
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
@@ -40,10 +32,11 @@ async function dbConnect() {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGO_URI as string)
-    .then((mongoose) => mongoose);
-    }
-    cached.conn = await cached.promise;
-    return cached.conn;
+      .then((mongooseInstance) => mongooseInstance.connection); // Ensure it resolves to the connection, not the mongoose object
+  }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
 export default dbConnect;

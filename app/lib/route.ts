@@ -1,11 +1,11 @@
 import dbConnect from './server';
-import Car from './models.ts/car';
+import Car from './models/car';
 import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
 
-import { Request, Response } from 'express';
-
-const authenticate = (req: Request) => {
-  const token = req.headers.authorization?.split(' ')[1];
+// Authentication function
+const authenticate = (request: Request) => {
+  const token = request.headers.get('authorization')?.split(' ')[1];
 
   if (!token) throw new Error('Access denied');
   const secret = process.env.JWT_SECRET;
@@ -14,56 +14,80 @@ const authenticate = (req: Request) => {
   return jwt.verify(token, secret) as jwt.JwtPayload;
 };
 
-export default async function handler(req: Request, res: Response) {
+// **GET request handler**
+export async function GET(request: Request) {
   await dbConnect();
-
   try {
-    const user = authenticate(req);
-
-    if (req.method === 'POST') {
-      const { make, model, color, doorCount, isConvertible, engineSize } = req.body;
-      const car = new Car({ userId: (user as jwt.JwtPayload).id, make, model, color, doorCount, isConvertible, engineSize });
-      await car.save();
-      return res.status(201).json(car);
-    } else if (req.method === 'GET') {
-      const cars = await Car.find({ userId: user.id });
-      return res.json(cars);
-    } else {
-      res.status(405).json({ message: 'Method not allowed' });
-    }
+    const user = authenticate(request);
+    const cars = await Car.find({ userId: user.id });
+    return NextResponse.json(cars);
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(401).json({ message: error.message });
-    } else {
-      res.status(401).json({ message: 'An unknown error occurred' });
-    }
+    return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 401 });
   }
+}
 
+// **POST request handler**
+export async function POST(request: Request) {
+  await dbConnect();
   try {
-    const user = authenticate(req);
+    const user = authenticate(request);
+    const { make, model, color, doorCount, isConvertible, engineSize } = await request.json();
 
-    if (req.method === 'PUT') {
-      const { id } = req.params;
-      const car = await Car.findByIdAndUpdate(id, req.body, { new: true });
-      if (!car || car.userId.toString() !== user.id) {
-        return res.status(404).json({ message: 'Car not found or unauthorized' });
-      }
-      return res.json(car);
-    } else if (req.method === 'DELETE') {
-      const { id } = req.params;
-      const car = await Car.findByIdAndDelete(id);
-      if (!car || car.userId.toString() !== user.id) {
-        return res.status(404).json({ message: 'Car not found or unauthorized' });
-      }
-      return res.json({ message: 'Car deleted' });
-    } else {
-      res.status(405).json({ message: 'Method not allowed' });
-    }
+    const car = new Car({
+      userId: user.id,
+      make,
+      model,
+      color,
+      doorCount,
+      isConvertible,
+      engineSize,
+    });
+
+    await car.save();
+    return NextResponse.json(car, { status: 201 });
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(401).json({ message: error.message });
-    } else {
-      res.status(401).json({ message: 'An unknown error occurred' });
+    return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 400 });
+  }
+}
+
+// **PUT request handler**
+export async function PUT(request: Request) {
+  await dbConnect();
+  try {
+    const user = authenticate(request);
+    const id = new URL(request.url).searchParams.get('id');
+
+    if (!id) return NextResponse.json({ message: 'Missing car ID' }, { status: 400 });
+
+    const car = await Car.findById(id);
+    if (!car || car.userId.toString() !== user.id) {
+      return NextResponse.json({ message: 'Car not found or unauthorized' }, { status: 404 });
     }
+
+    const updatedCar = await Car.findByIdAndUpdate(id, await request.json(), { new: true });
+    return NextResponse.json(updatedCar);
+  } catch (error) {
+    return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 400 });
+  }
+}
+
+// **DELETE request handler**
+export async function DELETE(request: Request) {
+  await dbConnect();
+  try {
+    const user = authenticate(request);
+    const id = new URL(request.url).searchParams.get('id');
+
+    if (!id) return NextResponse.json({ message: 'Missing car ID' }, { status: 400 });
+
+    const car = await Car.findById(id);
+    if (!car || car.userId.toString() !== user.id) {
+      return NextResponse.json({ message: 'Car not found or unauthorized' }, { status: 404 });
+    }
+
+    await Car.findByIdAndDelete(id);
+    return NextResponse.json({ message: 'Car deleted' });
+  } catch (error) {
+    return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 400 });
   }
 }

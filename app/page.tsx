@@ -30,7 +30,7 @@ export default function HomePage() {
   }, []);
 
   const handleButtonClick = () => {
-    const isLoggedIn = false; // Replace with actual auth logic
+    const isLoggedIn = false; 
     router.push(isLoggedIn ? "/vehicles" : "/login");
   };
 
