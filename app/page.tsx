@@ -7,7 +7,7 @@ import Image from "next/image";
 import PageLayout from "@/app/components/PageLayout";
 
 const messages: string[] = [
-  "Transform your vehicle into a masterpiece",
+  "Transform your vehicles into masterpieces",
   "Customize every detail to your vision", 
   "Create the car of your dreams",
   "Join thousands of car enthusiasts",
@@ -41,7 +41,7 @@ export default function HomePage() {
       {/* Left side - Car Image */}
       <div className="w-1/2 flex items-center justify-center p-8 bg-[#2B4C5B]/10">
         <Image
-          src="/car-preview.jpg"
+          src="/supra-car.webp"
           alt="Luxury car preview"
           width={800}
           height={600}

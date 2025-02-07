@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '../../lib/data';
-import { User } from '../../lib/definitions';
+import { connectToDatabase } from '../lib/mongodb';
+import { User } from '../lib/definitions';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
