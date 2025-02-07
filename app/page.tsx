@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -40,14 +39,13 @@ export default function HomePage() {
     <PageLayout className="flex">
       {/* Left side - Car Image */}
       <div className="w-1/2 flex items-center justify-center p-8 bg-[#2B4C5B]/10">
-        <Image
-          src="/supra-car.webp"
-          alt="Luxury car preview"
-          width={800}
-          height={600}
-          className="rounded-2xl shadow-xl object-cover hover:scale-105 transition-transform duration-300"
-          priority
-        />
+      <iframe
+            title="2020 Aston Martin Vantage 59 AMR"
+            allowFullScreen
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            src="https://sketchfab.com/models/75ca92f8d548470d83a7daaacb100bc5/embed"
+            className="w-full h-full"
+            />
       </div>
 
       {/* Right side - Content */}
