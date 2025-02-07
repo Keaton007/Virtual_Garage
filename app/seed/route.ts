@@ -1,42 +1,38 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { connectToDatabase } from '../lib/data';
 import User from '../lib/models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { method } = req;
-
+// **POST request handler**
+export async function POST(request: Request) {
   await connectToDatabase();
 
-  switch (method) {
-    case 'POST': // Login or Register logic
-      const { action, email, password, name } = req.body;
+  try {
+    const { action, email, password, name } = await request.json();
 
-      if (action === 'register') {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ email, password: hashedPassword, name });
-        await newUser.save();
-        return res.status(201).json({ message: 'User created' });
-      }
+    if (action === 'register') {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = new User({ email, password: hashedPassword, name });
+      await newUser.save();
+      return NextResponse.json({ message: 'User created' }, { status: 201 });
+    }
 
-      if (action === 'login') {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: 'User not found' });
+    if (action === 'login') {
+      const user = await User.findOne({ email });
+      if (!user) return NextResponse.json({ message: 'User not found' }, { status: 404 });
 
-        const isValidPassword = await bcrypt.compare(password, user.password);
-        if (!isValidPassword) return res.status(401).json({ message: 'Invalid credentials' });
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', {
-          expiresIn: '1h',
-        });
-        return res.status(200).json({ token, user });
-      }
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'secret', {
+        expiresIn: '1h',
+      });
+      return NextResponse.json({ token, user });
+    }
 
-      return res.status(400).json({ message: 'Invalid action' });
-
-    default:
-      return res.status(405).end(); // Method not allowed
+    return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
+  } catch (error) {
+    return NextResponse.json({ message: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }

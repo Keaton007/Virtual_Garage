@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { getAuthToken } from '@/app/utils/auth';
+import Image from 'next/image';
 import PageLayout from "@/app/components/PageLayout";
 
 interface Vehicle {
@@ -276,7 +276,7 @@ export default function VehiclesPage() {
                 
                 {/* Main Image Area */}
                 <div className="aspect-[16/9] relative rounded-xl overflow-hidden">
-                  <img 
+                  <Image
                     src={selectedVehicle.imageUrl}
                     alt="Vehicle Preview"
                     className="absolute inset-0 w-full h-full object-cover"
