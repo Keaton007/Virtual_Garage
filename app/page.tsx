@@ -6,7 +6,6 @@ import Image from "next/image";
 import PageLayout from "@/app/components/PageLayout";
 
 const messages: string[] = [
-  "Transform your vehicles into masterpieces",
   "Customize every detail to your vision", 
   "Create the car of your dreams",
   "Join thousands of car enthusiasts",
@@ -38,14 +37,14 @@ export default function HomePage() {
   return (
     <PageLayout className="flex">
       {/* Left side - Car Image */}
-      <div className="w-1/2 flex items-center justify-center p-8 bg-[#2B4C5B]/10">
-      <iframe
-            title="2020 Aston Martin Vantage 59 AMR"
-            allowFullScreen
-            allow="autoplay; fullscreen; xr-spatial-tracking"
-            src="https://sketchfab.com/models/75ca92f8d548470d83a7daaacb100bc5/embed"
-            className="w-full h-full"
-            />
+      <div className="w-[90%] md:w-[50%] h-[500px] md:h-[600px] mx-auto mt-24 relative rounded-2xl overflow-hidden">
+        <iframe
+          title="2020 Aston Martin Vantage 59 AMR"
+          allowFullScreen
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+          src="https://sketchfab.com/models/75ca92f8d548470d83a7daaacb100bc5/embed"
+          className="absolute inset-0 w-full h-full"
+        />
       </div>
 
       {/* Right side - Content */}

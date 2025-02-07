@@ -65,6 +65,7 @@ export async function GET(request: Request) {
   }
 }
 
+
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 3959; 
   const dLat = (lat2 - lat1) * Math.PI / 180;
