@@ -3,7 +3,7 @@ import { connectToDatabase } from "@/app/lib/mongodb";
 import jwt from 'jsonwebtoken';
 import { headers } from 'next/headers';
 
-export async function GET(request: Request) {
+export async function GET(): Promise<NextResponse> {
   try {
     const headersList = await headers();
     const authHeader = headersList.get('authorization');
