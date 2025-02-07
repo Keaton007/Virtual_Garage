@@ -1,13 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function RegisterForm() {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    });
     const [error, setError] = useState("");
     const router = useRouter();
 
@@ -16,132 +20,123 @@ export default function RegisterForm() {
         setError("");
 
         try {
-
-            if (!username && !email && !password) {
+            if (!formData.username || !formData.email || !formData.password) {
                 setError("Please fill out all fields");
                 return;
-            };
+            }
 
-            if (password !== confirmPassword) {
-                setError("Please make sure the passwords are the same");
+            if (formData.password !== formData.confirmPassword) {
+                setError("Passwords do not match");
                 return;
-            };
+            }
 
-            // replace with register api call, need to return a token for login
-            // will redirect to /vehicles with the token
-            const response = await fetch("/app/lib/register", {
+            const response = await fetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password
+                }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                //attach token here, send to vehicles. user will be logged in.
-                router.push("/ui/vehicles");
+                // Redirect to login page after successful registration
+                router.push("/login");
             } else {
-                const data = await response.json();
-                setError(data.message);
+                setError(data.message || "Registration failed");
             }
         } catch (err) {
             console.error(err);
-            setError("An unexpected error occured. Please try again.");
+            setError("An unexpected error occurred. Please try again.");
         }
     };
 
     return (
-        <div className="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
-            <div className="px-6 py-4">
-                <div className="flex justify-center mx-auto">
-                    <img
-                        className="w-auto h-20 sm:h-16"
-                        src="/c75ea8f9-32a4-4ba9-a605-805d37d68b07.webp"
-                        alt="logo"
+        <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+                <Image
+                    src="/c75ea8f9-32a4-4ba9-a605-805d37d68b07.webp"
+                    alt="Virtual Garage Logo"
+                    width={180}
+                    height={48}
+                    className="mx-auto mb-4 rounded-xl"
+                />
+                <h2 className="text-2xl font-bold text-white mb-2">Create Account</h2>
+                <p className="text-white/60">Join the Virtual Garage community</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                    <input
+                        className="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:border-[#f26522]/50 transition-colors backdrop-blur-sm"
+                        type="text"
+                        placeholder="Username"
+                        value={formData.username}
+                        onChange={(e) => setFormData({...formData, username: e.target.value})}
+                        required
                     />
                 </div>
 
-                <h3 className="mt-3 text-xl font-medium text-center text-gray-600 dark:text-gray-200">
-                    Welcome
-                </h3>
-                <p className="mt-1 text-center text-gray-500 dark:text-gray-400">
-                    Register for an account
-                </p>
+                <div>
+                    <input
+                        className="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:border-[#f26522]/50 transition-colors backdrop-blur-sm"
+                        type="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                        required
+                    />
+                </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="w-full mt-4">
-                        <input
-                            className="block w-full px-4 py-2 mt-2 text-gray-300 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:bordey-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                            type="Username"
-                            placeholder="Username"
-                            aria-label="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
+                <div>
+                    <input
+                        className="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:border-[#f26522]/50 transition-colors backdrop-blur-sm"
+                        type="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                        required
+                    />
+                </div>
 
-                    <div className="w-full mt-4">
-                        <input
-                            className="block w-full px-4 py-2 mt-2 text-gray-300 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:bordey-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                            type="Email"
-                            placeholder="Email"
-                            aria-label="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
+                <div>
+                    <input
+                        className="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:border-[#f26522]/50 transition-colors backdrop-blur-sm"
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={formData.confirmPassword}
+                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                        required
+                    />
+                </div>
 
-                    <div className="w-full mt-4">
-                        <input
-                            className="block w-full px-4 py-2 mt-2 text-gray-300 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:bordey-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                            type="Password"
-                            placeholder="Password"
-                            aria-label="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+                {error && (
+                    <p className="text-red-400 text-sm">
+                        {error}
+                    </p>
+                )}
 
-                    <div className="w-full mt-4">
-                        <input
-                            className="block w-full px-4 py-2 mt-2 text-gray-300 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:bordey-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                            type="Password"
-                            placeholder="Confirm Password"
-                            aria-label="Confirm Password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                        />
-                    </div>
+                <button
+                    type="submit"
+                    className="w-full px-8 py-3 bg-[#f26522]/90 hover:bg-[#f26522] text-white rounded-full transition-all font-medium hover:shadow-lg hover:shadow-[#f26522]/20"
+                >
+                    Create Account
+                </button>
+            </form>
 
-                    {error && (
-                        <p className="mt-2 text-sm text-red-500">
-                            {error}
-                        </p>
-                    )}
-
-                    <div className="flex items-center justify-center mt-4">
-                        <button
-                            type="submit"
-                            className="w-full px-6 py-2 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-                        >
-                            Register
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div className="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700">
-                <span className="text-sm text-gray-600 dark:text-gray-200">
+            <div className="mt-8 text-center">
+                <span className="text-white/60">
                     Already have an account?{" "}
                 </span>
-                <a
+                <Link
                     href="/login"
-                    className="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
+                    className="text-[#f26522] hover:text-white transition-colors font-medium"
                 >
-                    Log in
-                </a>
+                    Sign In
+                </Link>
             </div>
         </div>
     );
