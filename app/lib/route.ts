@@ -1,11 +1,10 @@
 import dbConnect from './server';
-import Car from './models.ts/car';
+import Car from './models/car';
 import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
 
-import { Request, Response } from 'express';
-
-const authenticate = (req: Request) => {
-  const token = req.headers.authorization?.split(' ')[1];
+const authenticate = (request: Request) => {
+  const token = request.headers.get('authorization')?.split(' ')[1];
 
   if (!token) throw new Error('Access denied');
   const secret = process.env.JWT_SECRET;
@@ -14,56 +13,56 @@ const authenticate = (req: Request) => {
   return jwt.verify(token, secret) as jwt.JwtPayload;
 };
 
-export default async function handler(req: Request, res: Response) {
+export async function handler(request: Request) {
   await dbConnect();
 
   try {
-    const user = authenticate(req);
+    const user = authenticate(request);
 
-    if (req.method === 'POST') {
-      const { make, model, color, doorCount, isConvertible, engineSize } = req.body;
-      const car = new Car({ userId: (user as jwt.JwtPayload).id, make, model, color, doorCount, isConvertible, engineSize });
+    // Handling POST and GET methods
+    if (request.method === 'POST') {
+      const { make, model, color, doorCount, isConvertible, engineSize } = await request.json();
+      const car = new Car({
+        userId: (user as jwt.JwtPayload).id,
+        make,
+        model,
+        color,
+        doorCount,
+        isConvertible,
+        engineSize,
+      });
       await car.save();
-      return res.status(201).json(car);
-    } else if (req.method === 'GET') {
+      return NextResponse.json(car, { status: 201 });
+    } else if (request.method === 'GET') {
       const cars = await Car.find({ userId: user.id });
-      return res.json(cars);
-    } else {
-      res.status(405).json({ message: 'Method not allowed' });
+      return NextResponse.json(cars);
     }
+
+    // Handling PUT and DELETE methods
+    if (request.method === 'PUT' || request.method === 'DELETE') {
+      const id = new URL(request.url).searchParams.get('id');
+      const car = await Car.findById(id);
+
+      if (!car || car.userId.toString() !== user.id) {
+        return NextResponse.json({ message: 'Car not found or unauthorized' }, { status: 404 });
+      }
+
+      if (request.method === 'PUT') {
+        const updatedCar = await Car.findByIdAndUpdate(id, await request.json(), { new: true });
+        return NextResponse.json(updatedCar);
+      } else if (request.method === 'DELETE') {
+        await Car.findByIdAndDelete(id);
+        return NextResponse.json({ message: 'Car deleted' });
+      }
+    }
+
+    return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
+
   } catch (error) {
     if (error instanceof Error) {
-      res.status(401).json({ message: error.message });
+      return NextResponse.json({ message: error.message }, { status: 401 });
     } else {
-      res.status(401).json({ message: 'An unknown error occurred' });
-    }
-  }
-
-  try {
-    const user = authenticate(req);
-
-    if (req.method === 'PUT') {
-      const { id } = req.params;
-      const car = await Car.findByIdAndUpdate(id, req.body, { new: true });
-      if (!car || car.userId.toString() !== user.id) {
-        return res.status(404).json({ message: 'Car not found or unauthorized' });
-      }
-      return res.json(car);
-    } else if (req.method === 'DELETE') {
-      const { id } = req.params;
-      const car = await Car.findByIdAndDelete(id);
-      if (!car || car.userId.toString() !== user.id) {
-        return res.status(404).json({ message: 'Car not found or unauthorized' });
-      }
-      return res.json({ message: 'Car deleted' });
-    } else {
-      res.status(405).json({ message: 'Method not allowed' });
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(401).json({ message: error.message });
-    } else {
-      res.status(401).json({ message: 'An unknown error occurred' });
+      return NextResponse.json({ message: 'An unknown error occurred' }, { status: 500 });
     }
   }
 }

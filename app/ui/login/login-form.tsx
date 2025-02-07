@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { setAuthToken } from '@/app/utils/auth';
@@ -10,7 +9,6 @@ export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +31,7 @@ export default function LoginForm() {
         setError(data.message || "Login failed. Please try again.");
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError("An unexpected error occurred. Please try again." + err);
     }
   };
 
@@ -99,7 +97,7 @@ export default function LoginForm() {
 
       <div className="mt-8 text-center">
         <span className="text-white/60">
-          Don't have an account?{" "}
+          Dont have an account?{" "}
         </span>
         <Link
           href="/register"

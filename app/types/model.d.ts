@@ -1,9 +1,9 @@
 declare module '*.glb' {
-  const content: any
-  export default content
+  const content: ArrayBuffer;
+  export default content;
 }
 
 declare module '*.gltf' {
-  const content: any
-  export default content
-} 
+  const content: string;
+  export default content;
+}

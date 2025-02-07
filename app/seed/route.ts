@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { connectToDatabase } from '../lib/mongodb';
-import { User } from '../lib/definitions';
+import { connectToDatabase } from '../lib/data';
+import User from '../lib/models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
